@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 csv_file = 'ausgabe.csv'
 csv_export = 'AQI-export.csv'
 csv_weatherhistory = 'csv-files/Weather_history.csv'
+csv_temp_weather = 'csv-files/Temp_weather.csv'
 
 # DB Zeug
 ## Name der DB

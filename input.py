@@ -1,7 +1,13 @@
 
 # Imports & Generische Konfig
 ## Libraries
+import config
 import requests
+import csv
+import codecs
+import urllib.request
+import urllib.error
+import sys
 import json
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -15,6 +21,89 @@ def weather_data():
     weather_data = json.loads(response.content)
    
     return weather_data
+
+def model_weather_data(date_str, city):
+    BaseURL = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/'
+
+    #Key modified to NOT cause accidential costs
+    ApiKey='XB2AJ7B74CP7PS8RWU3HY8WME'
+    #UnitGroup sets the units of the output - us or metric
+    UnitGroup='metric'
+
+    #Location for the weather data
+    if city == "Zurich":
+        Location='47.39,8.54'
+    else:
+        Location=city
+
+    #Optional start and end dates
+    #If nothing is specified, the forecast is retrieved. 
+    #If start date only is specified, a single historical or forecast day will be retrieved
+    #If both start and and end date are specified, a date range will be retrieved
+    StartDate = date_str
+    EndDate= date_str
+
+    #JSON or CSV 
+    #JSON format supports daily, hourly, current conditions, weather alerts and events in a single JSON package
+    #CSV format requires an 'include' parameter below to indicate which table section is required
+    ContentType="csv"
+
+    #include sections
+    #values include days,hours,current,alerts
+    Include="days"
+    #basic query including location
+    ApiQuery=BaseURL + Location
+
+    #append the start and end date if present
+    if (len(StartDate)):
+        ApiQuery+="/"+StartDate
+        if (len(EndDate)):
+            ApiQuery+="/"+EndDate
+
+    #Url is completed. Now add query parameters (could be passed as GET or POST)
+    ApiQuery+="?"
+
+    #append each parameter as necessary
+    if (len(UnitGroup)):
+        ApiQuery+="&unitGroup="+UnitGroup
+
+    if (len(ContentType)):
+        ApiQuery+="&contentType="+ContentType
+
+    if (len(Include)):
+        ApiQuery+="&include="+Include
+
+    ApiQuery+="&key="+ApiKey
+
+    print(' - Running query URL: ', ApiQuery)
+    print()
+
+    try: 
+        CSVBytes = urllib.request.urlopen(ApiQuery)
+    except urllib.error.HTTPError  as e:
+        ErrorInfo= e.read().decode() 
+        print('Error code: ', e.code, ErrorInfo)
+        sys.exit()
+    except  urllib.error.URLError as e:
+        ErrorInfo= e.read().decode() 
+        print('Error code: ', e.code,ErrorInfo)
+        sys.exit()
+        
+    # Parse the results as CSV, change lon/lat to string and write to file
+    CSVText = csv.reader(codecs.iterdecode(CSVBytes, 'utf-8'))
+    
+    modified_data = []
+    for row in CSVText:
+        if row[0] == "47.39,8.54":
+            # Ersetzen Sie den Standortwert durch "Zch_Stampfenbachstrasse"
+            row[0] = "Zch_Stampfenbachstrasse"
+        
+        # Fügen Sie die Zeile zur modifizierten Datenliste hinzu
+        modified_data.append(row)
+
+    with open(config.csv_temp_weather, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(modified_data)
 
 # Feinstaubdaten für Bestimmten Tag & Statdt auslesen
 def AQI_data(date_str, city):

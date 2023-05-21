@@ -1,6 +1,7 @@
 # Libraries
 import os
 import psycopg2
+from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from psycopg2 import sql
@@ -26,3 +27,10 @@ def format_timestamp(date_str):
 def format_date(date_str):
     parts = date_str.split('-')
     return f"{parts[2]}.{parts[1]}.{parts[0][-2:]}"
+
+# Funktion zur Umwandlung des Formular Datums
+def form_format_date(date_str):
+    dt = datetime.strptime(date_str, "%a, %d %b %Y %H:%M:%S %Z")
+    output_date = dt.strftime("%Y-%m-%d")
+    return output_date
+
