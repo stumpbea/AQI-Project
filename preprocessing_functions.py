@@ -2,12 +2,8 @@
 import os
 import psycopg2
 from datetime import datetime
-from sqlalchemy import create_engine
-from sqlalchemy import text
-from psycopg2 import sql
 
 os.environ['MPLCONFIGDIR'] = "/home/AQI"
-import matplotlib.pyplot as plt
 
 # Settings
 import warnings
