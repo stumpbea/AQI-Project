@@ -14,8 +14,18 @@ warnings.filterwarnings("ignore")
 def db_connect(dbname):
     # Funktion verbindet die angegebene DB im localhost container
     engine = psycopg2.connect("host=localhost dbname=" + dbname + " user=admin password=secret")
-    conn = engine.cursor()
-   
+    conn = config.db_login.connect()
+    metadata = MetaData()
+
+    if not config.db_login.dialect.has_table(conn, config.db_AQI_history):
+        # Tabelle erstellen
+        AQI_history_table = Table(
+            config.db_AQI_history,
+            metadata,
+            autoload=False
+        )
+        AQI_history_table.create(checkfirst=True)
+       
          
 # Funktion zur Umwandlung des Timestams in ein Datum
 def format_timestamp(date_str):
