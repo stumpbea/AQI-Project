@@ -98,7 +98,7 @@ def model_weather_data(date_str, city):
 # Feinstaubdaten für Bestimmten Tag & Statdt auslesen
 def AQI_data(date_str, city):
 
-    #Daten aus Air Quality Index laden
+    #Daten der letzten 30 Tage aus Air Quality Index laden
     URL = "https://www.bafu.admin.ch/bafu/de/home/themen/luft/zustand/daten/luftbelastung--historische-daten/nabel--tageswerte-der-letzten-30--tage/werte-der-letzten-30-tage-nabel--feinstaub--pm10-.html"
 
     f = requests.get(URL)
