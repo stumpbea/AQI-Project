@@ -15,6 +15,7 @@ def db_connect(dbname):
     # Funktion verbindet die angegebene DB im localhost container
     engine = psycopg2.connect("host=localhost dbname=" + dbname + " user=admin password=secret")
     conn = config.db_login.connect()
+
     metadata = MetaData()
 
     if not config.db_login.dialect.has_table(conn, config.db_AQI_history):
