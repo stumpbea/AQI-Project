@@ -1,6 +1,8 @@
 # Libraries
+import config
 import os
 import psycopg2
+from sqlalchemy import Table, MetaData
 from datetime import datetime
 
 os.environ['MPLCONFIGDIR'] = "/home/AQI"
@@ -11,8 +13,10 @@ warnings.filterwarnings("ignore")
 
 def db_connect(dbname):
     # Funktion verbindet die angegebene DB im localhost container
-    conn = psycopg2.connect("host=localhost dbname=" + dbname + " user=admin password=secret")
-
+    engine = psycopg2.connect("host=localhost dbname=" + dbname + " user=admin password=secret")
+    conn = engine.cursor()
+   
+         
 # Funktion zur Umwandlung des Timestams in ein Datum
 def format_timestamp(date_str):
     parts = date_str[:10]
