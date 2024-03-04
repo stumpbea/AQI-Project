@@ -1,21 +1,10 @@
 version: '3.8'
 services:
-
-  db:
-    container_name: AQI_postgresdb_container
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: AQI-DB
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+  web:
+    image: nginx:latest
+    container_name: Fintech_WebServer
     ports:
-      - 5432:5432
-
-volumes:
-  pgdata:
-  
-  
-  
+      - "80:80"
+    volumes:
+#      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./index.html:/usr/share/nginx/html/index.html
